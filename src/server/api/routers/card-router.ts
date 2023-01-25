@@ -1,8 +1,7 @@
-import { z } from "zod";
-
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { CardSchema } from "../../../components/MakeCardForm";
 
 function makeid(length: number) {
   let result = "";
@@ -17,14 +16,7 @@ function makeid(length: number) {
 
 export const cardRouter = createTRPCRouter({
   createCard: protectedProcedure
-    .input(
-      z.object({
-        website: z.string().optional(),
-        title: z.string(),
-        name: z.string(),
-        email: z.string(),
-      })
-    )
+    .input(CardSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
       const { id, image } = session.user;
@@ -66,4 +58,16 @@ export const cardRouter = createTRPCRouter({
       }
       return card;
     }),
+  getCardsByUser: protectedProcedure.query(({ ctx }) => {
+    const { prisma, session } = ctx;
+    const userId = session.user.id;
+    return prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        businessCards: true,
+      },
+    });
+  }),
 });

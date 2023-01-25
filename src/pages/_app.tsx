@@ -1,13 +1,13 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { api } from "../utils/api";
 
 import "../styles/globals.css";
 import "../components/BusinessCard/BusinessCard.css";
-import Navbar from "../components/Navbar";
-import Spinner from "../components/Spinner";
+import PageLayout from "../components/Layout/PageLayout";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -15,9 +15,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Spinner />
-      <Navbar />
-      <Component {...pageProps} />
+      <PageLayout>
+        <Component {...pageProps} />
+      </PageLayout>
+      <ReactQueryDevtools />
     </SessionProvider>
   );
 };

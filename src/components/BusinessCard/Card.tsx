@@ -1,41 +1,56 @@
-import { useSession } from "next-auth/react";
-import type { FC } from "react";
+import Image from "next/image";
 
-interface BusinessCardProps {
-  inputs?: {
-    title: string;
-    website: string;
-  };
-  card?: BusinessCard | null | undefined;
-}
+export type TheCardType = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  name: string;
+  email: string;
+  imgSrc: string | null;
+  title: string;
+  website: string | null;
+  slug: string;
+  authorId: string;
+};
 
-const BusinessCard: FC<BusinessCardProps> = ({ inputs, card }) => {
+export type CardType = {
+  name: string;
+  email: string;
+  title: string;
+  website?: string;
+};
+
+const Card = ({
+  card,
+  isMakeCard = false,
+}: {
+  card: TheCardType | CardType;
+  isMakeCard?: boolean;
+}) => {
   /**
    * Credit for this business card design to Joshua Ward
    * https://codepen.io/joshuaward/pen/YMyPWr
    */
 
-  const { data: sessionData } = useSession();
+  const name = card?.name || "John Doe";
+  const title = card?.title || "Business man";
+  const email = card?.email || "johndoe@email.com";
+  const website = card?.website || "www.thewebsite.com";
+  const imgSrc = "";
 
-  const front = card
-    ? "http://localhost:3000/api/og" +
-      "?username=" +
-      card.name +
-      "&title=" +
-      card.title +
-      "&imgSrc=" +
-      card.imgSrc
-    : inputs &&
-      "http://localhost:3000/api/og" +
-        "?username=" +
-        sessionData?.user?.name +
-        "&title=" +
-        inputs.title +
-        "&imgSrc=" +
-        sessionData?.user?.image;
+  const front = `http://localhost:3000/api/og?username=${name}&title=${title}&imgSrc=${imgSrc}`;
 
   return (
-    <div className="card">
+    <div className="card w-34 relative mt-6 h-48 w-[22rem] sm:h-48 sm:w-96">
+      {/* Card action buttons*/}
+      {!isMakeCard && (
+        <div className="hover:opacity-1 bg-slate-400 text-white opacity-0">
+          Action buttons
+        </div>
+      )}
+
+      {/* Back of the card */}
+
       <div className="card-back">
         <div className="line-numbers">
           <div>1</div>
@@ -57,14 +72,14 @@ const BusinessCard: FC<BusinessCardProps> = ({ inputs, card }) => {
             {" "}
             <span className="property">name</span>
             <span className="operator">: </span>
-            <span className="string">&#39;{sessionData?.user?.name}&#39;</span>
+            <span className="string">&#39;{name}&#39;</span>
             <span>,</span>
           </div>
           <div className="indent">
             {" "}
             <span className="property">title</span>
             <span className="operator">: </span>
-            <span className="string">&#39;{"Engineer"}&#39;</span>
+            <span className="string">&#39;{title}&#39;</span>
             <span>,</span>
           </div>
           <div className="indent">
@@ -76,26 +91,27 @@ const BusinessCard: FC<BusinessCardProps> = ({ inputs, card }) => {
               {" "}
               <span className="property">email</span>
               <span className="operator">: </span>
-              <span className="string">
-                &#39;{sessionData?.user?.email}&#39;
-              </span>
+              <span className="string">&#39;{email}&#39;</span>
               <span>,</span>
             </div>
             <div className="indent">
               <span className="property">website</span>
               <span className="operator">:</span>
-              <span className="string">&#39;{"www.mywebsite.com"}&#39;</span>
+              <span className="string">&#39;{website}&#39;</span>
             </div>
             <span>{"}"}</span>
           </div>
           <span>{"}"}</span>
         </code>
       </div>
+
+      {/* Front of the card */}
+
       <div className="card-front">
-        <img className="h-[15rem] w-[30rem]" src={front} />
+        <Image src={front} alt="Business card" width={480} height={240} />
       </div>
     </div>
   );
 };
 
-export default BusinessCard;
+export default Card;

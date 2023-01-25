@@ -1,12 +1,6 @@
-import React from "react";
-import { useIsMutating, useIsFetching } from "@tanstack/react-query";
-
 function Spinner() {
-  const isMutating = useIsMutating() > 0;
-  const isFetching = useIsFetching() > 0;
-  const spinnerVisibleClass = isMutating || isFetching ? "" : "hidden";
   return (
-    <div className={spinnerVisibleClass} role="status">
+    <div className="absolute top-0 left-0" role="status">
       <div className="fixed z-40 flex h-full w-full bg-white opacity-50"></div>
 
       <div className="fixed z-50 flex h-full w-full items-center justify-center ">
