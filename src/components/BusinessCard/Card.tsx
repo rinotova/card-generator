@@ -1,4 +1,6 @@
 import Image from "next/image";
+import type { MouseEvent } from "react";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
 export type TheCardType = {
   id: string;
@@ -40,12 +42,43 @@ const Card = ({
 
   const front = `http://localhost:3000/api/og?username=${name}&title=${title}&imgSrc=${imgSrc}`;
 
+  const mouseEnterHandler = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const card = target.closest(".js-card");
+    const actionButtons = card ? card.querySelector(".js-actionButtons") : null;
+    if (actionButtons) {
+      actionButtons.classList.add("fade-in");
+    }
+  };
+
+  const mouseLeaveHandler = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const card = target.closest(".js-card");
+    const actionButtons = card ? card.querySelector(".js-actionButtons") : null;
+    if (actionButtons) {
+      actionButtons.classList.remove("fade-in");
+    }
+  };
+
   return (
-    <div className="card w-34 relative mt-6 h-48 w-[22rem] sm:h-48 sm:w-96">
+    <div
+      className="card js-card w-34 relative mt-7 h-48 w-[22rem] sm:h-48 sm:w-96"
+      onMouseEnter={mouseEnterHandler}
+      onMouseLeave={mouseLeaveHandler}
+    >
       {/* Card action buttons*/}
       {!isMakeCard && (
-        <div className="hover:opacity-1 bg-slate-400 text-white opacity-0">
-          Action buttons
+        <div className="js-actionButtons flex h-8 items-center justify-center space-x-8 opacity-0 transition-opacity duration-500">
+          <FaEdit
+            className="cursor-pointer opacity-50 transition-opacity duration-300 hover:opacity-100"
+            size={"1.2em"}
+            title="Edit card info"
+          />
+          <FaTrashAlt
+            className="cursor-pointer opacity-50 transition-opacity duration-300 hover:opacity-100"
+            size={"1.2em"}
+            title="Delete card"
+          />
         </div>
       )}
 
