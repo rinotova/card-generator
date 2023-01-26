@@ -13,8 +13,6 @@ code,
 
 .card {
   position: relative;
-  /*   width: 30rem;
-  height: 15rem; */
   perspective: 150rem;
 }
 .card-front,
@@ -51,7 +49,7 @@ code,
 }
 .card-front:after,
 .card-back:after {
-  content: "+";
+  content: "";
   top: 0;
   right: 10px;
   font-size: 24px;

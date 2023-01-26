@@ -7,6 +7,7 @@ import Spinner from "../Spinner";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export type TheCardType = {
   id?: string;
@@ -32,12 +33,12 @@ const Card = ({
    * Credit for this business card design to Joshua Ward
    * https://codepen.io/joshuaward/pen/YMyPWr
    */
-
-  const name = card.name;
+  const { data: session } = useSession();
+  const name = card.name || "John Doe";
   const title = card.title;
   const email = card.email;
   const website = card?.website || "www.thewebsite.com";
-  const imgSrc = "";
+  const imgSrc = session?.user?.image || "https://placeimg.com/640/480/people";
 
   const front = `http://localhost:3000/api/og?username=${name}&title=${title}&imgSrc=${imgSrc}`;
 
@@ -97,7 +98,7 @@ const Card = ({
       {isLoading && <Spinner />}
       <Toaster />
       <div
-        className="card js-card w-34 relative mt-7 h-48 w-[22rem] sm:h-48 sm:w-96"
+        className="card js-card relative mt-7 h-48 w-[22rem] sm:h-48 sm:w-96"
         onMouseEnter={mouseEnterHandler}
         onMouseLeave={mouseLeaveHandler}
       >
@@ -180,8 +181,14 @@ const Card = ({
         {/* Front of the card */}
 
         <div className="card-front">
-          <p className="text-white">{name}</p>
-          <Image src={front} alt="Business card" width={480} height={240} />
+          <Image
+            src={front}
+            alt="Business card"
+            width={480}
+            height={240}
+            quality={100}
+            priority={true}
+          />
         </div>
       </div>
     </>

@@ -163,7 +163,7 @@ function MakeCardForm({
           </div>
 
           {/* Publish Button */}
-          <div className="mt-12 flex justify-center">
+          <div className="mt-8 flex justify-center sm:mt-12">
             <button
               type="submit"
               className="rounded-full bg-black/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-black/20"
