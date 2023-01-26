@@ -2,6 +2,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { CardSchema } from "../../../components/MakeCardForm";
+import { z } from "zod";
 
 function makeid(length: number) {
   let result = "";
@@ -70,4 +71,91 @@ export const cardRouter = createTRPCRouter({
       },
     });
   }),
+  deleteCard: protectedProcedure
+    .input(
+      z.object({
+        cardId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      if (!session) {
+        throw new TRPCError({
+          message: "Please log in first",
+          code: "UNAUTHORIZED",
+        });
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
+      return prisma.businessCard.delete({
+        where: {
+          id_authorId: {
+            id: input.cardId,
+            authorId: session.user.id,
+          },
+        },
+      });
+    }),
+  getCardById: protectedProcedure
+    .input(
+      z.object({
+        cardId: z.string(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      if (!session) {
+        throw new TRPCError({
+          message: "Please log in first",
+          code: "UNAUTHORIZED",
+        });
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
+      return prisma.businessCard.findUnique({
+        where: {
+          id_authorId: {
+            id: input.cardId,
+            authorId: session.user.id,
+          },
+        },
+      }) as unknown;
+    }),
+  updateCard: protectedProcedure
+    .input(CardSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const { id: userId } = session.user;
+      const { title, website, name, email, id: cardId } = input;
+      let card;
+
+      if (!cardId) {
+        throw new TRPCError({
+          message: "Invalid card id",
+          code: "INTERNAL_SERVER_ERROR",
+        });
+      }
+
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        card = (await prisma.businessCard.update({
+          where: {
+            id_authorId: {
+              id: cardId,
+              authorId: userId,
+            },
+          },
+          data: {
+            title,
+            website,
+            email,
+            name,
+          },
+        })) as unknown;
+      } catch (e) {
+        throw new TRPCError({
+          message: "There was a network error",
+          code: "INTERNAL_SERVER_ERROR",
+        });
+      }
+      return card;
+    }),
 });

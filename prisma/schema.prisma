@@ -60,5 +60,5 @@ model BusinessCard {
   slug          String
   authorId String
   author   User   @relation(fields: [authorId], references: [id])
-  @@unique([slug])
+  @@unique([id, authorId])
 }

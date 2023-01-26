@@ -7,24 +7,44 @@ import Heading from "./Layout/Heading";
 import Spinner from "./Spinner";
 import { object, z } from "zod";
 import FormInput from "./FormInput";
+import { useRouter } from "next/router";
 
 export const CardSchema = object({
+  id: z.string().optional(),
   name: z.string().min(8),
   email: z.string().email(),
   title: z.string(),
   website: z.string().optional(),
 });
 
-function MakeCardForm() {
+function MakeCardForm({
+  card,
+  editMode,
+}: {
+  card?: {
+    id: string;
+    name: string;
+    title: string;
+    website?: string;
+    email: string;
+    slug?: string;
+  };
+  editMode?: boolean;
+}) {
+  const id = editMode && card ? card.id : "";
+  const name = editMode && card ? card.name : "";
+  const email = editMode && card ? card.email : "";
+  const title = editMode && card ? card.title : "";
+  const website = editMode && card ? card.name : "";
   const [inputs, setInputs] = useState({
-    name: "",
-    email: "",
-    title: "",
-    website: "",
+    name: editMode ? name : "",
+    email: editMode ? email : "",
+    title: editMode ? title : "",
+    website: editMode ? website : "",
   });
-
+  const router = useRouter();
   const trpcUtils = api.useContext();
-  const { mutate: publishCard, isLoading } =
+  const { mutate: publishCard, isLoading: isCreateCardLoading } =
     api.cardRouter.createCard.useMutation({
       onSuccess: () => {
         setInputs({
@@ -33,8 +53,26 @@ function MakeCardForm() {
           title: "",
           website: "",
         });
-        toast.success("The card has been created!");
+        toast.success("The card has been created!", { duration: 4000 });
         void trpcUtils.cardRouter.getCardsByUser.prefetch();
+      },
+      onError: (e) => {
+        toast.error(e.message, { duration: 4000 });
+      },
+    });
+
+  const { mutate: updateCard, isLoading: isUpdateLoading } =
+    api.cardRouter.updateCard.useMutation({
+      onSuccess: () => {
+        setInputs({
+          name: "",
+          email: "",
+          title: "",
+          website: "",
+        });
+        void trpcUtils.cardRouter.getCardsByUser.prefetch();
+        void router.push("/makeCard");
+        toast.success("The card has been updated!", { duration: 4000 });
       },
       onError: (e) => {
         toast.error(e.message);
@@ -55,11 +93,16 @@ function MakeCardForm() {
       toast.error("The info provided is not complete");
       return;
     }
-    publishCard(cardInfo);
+
+    if (editMode) {
+      updateCard({ ...cardInfo, id });
+    } else {
+      publishCard(cardInfo);
+    }
   }
   return (
     <>
-      {isLoading && <Spinner />}
+      {isCreateCardLoading || (isUpdateLoading && <Spinner />)}
       <Toaster />
       <div className="md:w-[60%]">
         <form onSubmit={publishHandler}>
@@ -125,7 +168,7 @@ function MakeCardForm() {
               type="submit"
               className="rounded-full bg-black/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-black/20"
             >
-              Publish
+              {editMode ? "Update" : "Publish"}
             </button>
           </div>
         </form>
