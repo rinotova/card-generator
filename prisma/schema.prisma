@@ -46,6 +46,8 @@ model User {
   Account       Account[]
   Session       Session[]
   businessCards BusinessCard[]
+  public        Boolean @default(false)
+  @@unique([userName, public])
 }
 
 model BusinessCard {

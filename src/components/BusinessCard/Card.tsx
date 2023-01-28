@@ -25,9 +25,11 @@ export type TheCardType = {
 const Card = ({
   card,
   isMakeCard = false,
+  publicViewing = false,
 }: {
   card: TheCardType;
   isMakeCard?: boolean;
+  publicViewing?: boolean;
 }) => {
   /**
    * Credit for this business card design to Joshua Ward
@@ -103,7 +105,7 @@ const Card = ({
         onMouseLeave={mouseLeaveHandler}
       >
         {/* Card action buttons*/}
-        {card.id && !isMakeCard && (
+        {card.id && !isMakeCard && !publicViewing && (
           <div className="js-actionButtons flex h-8 items-center justify-center space-x-8 opacity-0 transition-opacity duration-500">
             <Link href={`/makeCard/${card.id}`}>
               <FaEdit

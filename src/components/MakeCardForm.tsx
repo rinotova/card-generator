@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 
 export const CardSchema = object({
   id: z.string().optional(),
-  name: z.string().min(8),
+  name: z.string(),
   email: z.string().email(),
   title: z.string(),
   website: z.string().optional(),

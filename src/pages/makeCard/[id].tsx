@@ -17,11 +17,9 @@ const MakeCard = ({
   };
 }) => {
   return (
-    <>
-      <CenteredLayout>
-        <MakeCardForm editMode={true} card={card} />
-      </CenteredLayout>
-    </>
+    <CenteredLayout>
+      <MakeCardForm editMode={true} card={card} />
+    </CenteredLayout>
   );
 };
 
