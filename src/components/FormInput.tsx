@@ -1,4 +1,5 @@
 import React from "react";
+import { DebounceInput } from "react-debounce-input";
 
 function FormInput({
   label,
@@ -32,19 +33,20 @@ function FormInput({
         }`}
       </label>
       <div className="mt-1">
-        <input
+        <DebounceInput
           value={value}
+          type={type}
+          name={label}
+          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          placeholder={placeholder}
+          required={required}
+          debounceTimeout={300}
           onChange={(e) =>
             setState((prevState) => ({
               ...prevState,
               [label]: e.target.value,
             }))
           }
-          type={type}
-          name={label}
-          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          placeholder={placeholder}
-          required={required}
         />
       </div>
     </div>
