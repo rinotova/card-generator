@@ -8,13 +8,19 @@ import Spinner from "./Spinner";
 import { object, z } from "zod";
 import FormInput from "./FormInput";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 export const CardSchema = object({
   id: z.string().optional(),
-  name: z.string(),
-  email: z.string().email(),
-  title: z.string(),
+  name: z
+    .string()
+    .max(20, { message: "Max length for the name is 20 characters" }),
+  email: z.string().email({ message: "The email provided is not valid" }),
+  title: z
+    .string()
+    .max(30, { message: "Max length for the name is 30 characters" }),
   website: z.string().optional(),
+  imgSrc: z.string().nullish(),
 });
 
 function MakeCardForm({
@@ -28,9 +34,11 @@ function MakeCardForm({
     website?: string;
     email: string;
     slug?: string;
+    imgSrc?: string;
   };
   editMode?: boolean;
 }) {
+  const { data: session } = useSession();
   const id = editMode && card ? card.id : "";
   const name = editMode && card ? card.name : "";
   const email = editMode && card ? card.email : "";
@@ -89,15 +97,22 @@ function MakeCardForm({
     };
     try {
       CardSchema.parse(cardInfo);
-    } catch (e) {
-      toast.error("The info provided is not complete");
+    } catch (e: unknown) {
+      if (e instanceof z.ZodError) {
+        e.issues.forEach((issue) => {
+          toast.error(issue.message, { duration: 3000 });
+        });
+      } else {
+        toast.error("There is an error in the info provided");
+      }
+
       return;
     }
 
     if (editMode) {
       updateCard({ ...cardInfo, id });
     } else {
-      publishCard(cardInfo);
+      publishCard({ ...cardInfo, imgSrc: session?.user?.image });
     }
   }
   return (
@@ -116,6 +131,7 @@ function MakeCardForm({
               value={inputs.name}
               setState={setInputs}
               placeholder="Name"
+              maxLength={20}
             />
 
             {/* Input field Email */}
@@ -135,6 +151,7 @@ function MakeCardForm({
               value={inputs.title}
               setState={setInputs}
               placeholder="Title"
+              maxLength={30}
             />
 
             {/* Input field Website */}

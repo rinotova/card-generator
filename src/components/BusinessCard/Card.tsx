@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import Image from "next/image";
 import type { MouseEvent } from "react";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaTrashAlt, FaShare } from "react-icons/fa";
 import { api } from "../../utils/api";
 import toast, { Toaster } from "react-hot-toast";
 import Spinner from "../Spinner";
@@ -40,8 +41,9 @@ const Card = ({
   const title = card.title;
   const email = card.email;
   const website = card?.website || "www.thewebsite.com";
-  const imgSrc = session?.user?.image || "https://placeimg.com/640/480/people";
+  const imgSrc = publicViewing ? card.imgSrc : session?.user?.image || "";
 
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const front = `http://localhost:3000/api/og?username=${name}&title=${title}&imgSrc=${imgSrc}`;
 
   const mouseEnterHandler = (e: MouseEvent) => {
@@ -95,6 +97,21 @@ const Card = ({
     confirmAlert(options);
   };
 
+  const copyLinkToClipboard = async (id: string | undefined) => {
+    if (!id) {
+      return;
+    }
+    const theUrl =
+      process.env.NODE_ENV === "development"
+        ? `${process.env.NEXT_PUBLIC_DEV_URL}/cardDetail/${id}`
+        : `${process.env.NEXT_PUBLIC_PROD_URL}/cardDetail/${id}`;
+
+    console.log(theUrl);
+
+    await navigator.clipboard.writeText(theUrl);
+    toast.success("Link copied succesfully!", { duration: 3000 });
+  };
+
   return (
     <>
       {isLoading && <Spinner />}
@@ -107,6 +124,17 @@ const Card = ({
         {/* Card action buttons*/}
         {card.id && !isMakeCard && !publicViewing && (
           <div className="js-actionButtons flex h-8 items-center justify-center space-x-8 opacity-0 transition-opacity duration-500">
+            {/* Share */}
+            <FaShare
+              className="cursor-pointer opacity-50 transition-opacity duration-300 hover:opacity-100"
+              size={"1.2em"}
+              title="Edit card info"
+              onClick={() => {
+                void copyLinkToClipboard(card.id);
+              }}
+            />
+
+            {/* Edit */}
             <Link href={`/makeCard/${card.id}`}>
               <FaEdit
                 className="cursor-pointer opacity-50 transition-opacity duration-300 hover:opacity-100"
@@ -115,6 +143,7 @@ const Card = ({
               />
             </Link>
 
+            {/* Delete */}
             <FaTrashAlt
               className="cursor-pointer opacity-50 transition-opacity duration-300 hover:opacity-100"
               size={"1.2em"}

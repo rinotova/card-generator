@@ -1,4 +1,4 @@
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { CardSchema } from "../../../components/MakeCardForm";
@@ -95,27 +95,18 @@ export const cardRouter = createTRPCRouter({
         },
       });
     }),
-  getCardById: protectedProcedure
+  getCardById: publicProcedure
     .input(
       z.object({
         cardId: z.string(),
       })
     )
     .query(({ ctx, input }) => {
-      const { prisma, session } = ctx;
-      if (!session) {
-        throw new TRPCError({
-          message: "Please log in first",
-          code: "UNAUTHORIZED",
-        });
-      }
+      const { prisma } = ctx;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
       return prisma.businessCard.findUnique({
         where: {
-          id_authorId: {
-            id: input.cardId,
-            authorId: session.user.id,
-          },
+          id: input.cardId,
         },
       }) as unknown;
     }),

@@ -26,7 +26,7 @@ const og = (req: NextApiRequest, res: NextApiResponse) => {
     (
       <div
         style={{ fontFamily: "sans-serif" }}
-        tw="relative w-[30rem] h-[15rem] flex flex-col p-10"
+        tw="relative w-[30rem] h-[15rem] flex flex-col p-10 justify-center"
       >
         <div tw="flex flex-row">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -36,9 +36,14 @@ const og = (req: NextApiRequest, res: NextApiResponse) => {
             tw="w-20 h-20 rounded-full shadow-2xl mb-4 mr-6"
             style={{ objectPosition: "center", objectFit: "cover" }}
           />
-          <div tw="flex flex-col ml-4">
+          <div tw="flex flex-col -ml-1">
             <h1 tw="text-3xl font-bold -mb-2 text-white">{name}</h1>
-            <h2 tw="text-xl font-medium text-white">{title}</h2>
+            <h2
+              style={{ fontStyle: "italic" }}
+              tw="text-xl font-medium text-white"
+            >
+              {title}
+            </h2>
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ function FormInput({
   setState,
   placeholder,
   type = "text",
+  maxLength,
 }: {
   label: string;
   required: boolean;
@@ -22,6 +23,7 @@ function FormInput({
   >;
   placeholder: string;
   type?: string;
+  maxLength?: number;
 }) {
   return (
     <div>
@@ -41,6 +43,7 @@ function FormInput({
           placeholder={placeholder}
           required={required}
           debounceTimeout={300}
+          maxLength={maxLength}
           onChange={(e) =>
             setState((prevState) => ({
               ...prevState,

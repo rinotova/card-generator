@@ -14,6 +14,7 @@ const MakeCard = ({
     website?: string;
     email: string;
     slug?: string;
+    imgSrc?: string;
   };
 }) => {
   return (
