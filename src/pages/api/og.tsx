@@ -14,6 +14,7 @@ const og = (req: NextApiRequest, res: NextApiResponse) => {
   const name = url.searchParams.get("username");
   const title = url.searchParams.get("title");
   const imgSrc = url.searchParams.get("imgSrc");
+  const preview = url.searchParams.get("preview");
 
   if (!name || !imgSrc) {
     return res
@@ -21,11 +22,16 @@ const og = (req: NextApiRequest, res: NextApiResponse) => {
       .json({ error: "Username and Image source are required" });
   }
 
+  const styles =
+    preview === "true"
+      ? { fontFamily: "sans-serif", backgroundColor: "black" }
+      : { fontFamily: "sans-serif" };
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
   return new ImageResponse(
     (
       <div
-        style={{ fontFamily: "sans-serif" }}
+        style={styles}
         tw="relative w-[30rem] h-[15rem] flex flex-col p-10 justify-center"
       >
         <div tw="flex flex-row">

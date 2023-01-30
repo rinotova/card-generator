@@ -4,24 +4,13 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { CardSchema } from "../../../components/MakeCardForm";
 import { z } from "zod";
 
-function makeid(length: number) {
-  let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-
 export const cardRouter = createTRPCRouter({
   createCard: protectedProcedure
     .input(CardSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
       const { id, image } = session.user;
-      const { title, website, name, email } = input;
+      const { title, website, name, email, ogUrl } = input;
       let card;
 
       try {
@@ -32,8 +21,8 @@ export const cardRouter = createTRPCRouter({
             website,
             email,
             imgSrc: image,
+            ogUrl,
             name,
-            slug: makeid(16),
             author: {
               connect: {
                 id,
@@ -115,7 +104,7 @@ export const cardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
       const { id: userId } = session.user;
-      const { title, website, name, email, id: cardId } = input;
+      const { title, website, name, email, id: cardId, ogUrl } = input;
       let card;
 
       if (!cardId) {
@@ -139,6 +128,7 @@ export const cardRouter = createTRPCRouter({
             website,
             email,
             name,
+            ogUrl,
           },
         })) as unknown;
       } catch (e) {

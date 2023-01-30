@@ -19,7 +19,7 @@ export type TheCardType = {
   imgSrc?: string | null;
   title: string;
   website?: string | null;
-  slug?: string;
+  ogUrl: string;
   authorId?: string;
 };
 
@@ -44,7 +44,10 @@ const Card = ({
   const imgSrc = publicViewing ? card.imgSrc : session?.user?.image || "";
 
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const front = `http://localhost:3000/api/og?username=${name}&title=${title}&imgSrc=${imgSrc}`;
+  const ogImageUrl =
+    process.env.NODE_ENV === "development"
+      ? `${process.env.NEXT_PUBLIC_DEV_URL}/api/og?username=${name}&title=${title}&imgSrc=${imgSrc}`
+      : `${process.env.NEXT_PUBLIC_PROD_URL}/api/og?username=${name}&title=${title}&imgSrc=${imgSrc}`;
 
   const mouseEnterHandler = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -213,7 +216,7 @@ const Card = ({
 
         <div className="card-front">
           <Image
-            src={front}
+            src={ogImageUrl}
             alt="Business card"
             width={480}
             height={240}

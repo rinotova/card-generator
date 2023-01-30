@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+
 import React, { useState } from "react";
 import Card from "./BusinessCard/Card";
 import type { FormEvent } from "react";
@@ -21,6 +23,7 @@ export const CardSchema = object({
     .max(30, { message: "Max length for the name is 30 characters" }),
   website: z.string().optional(),
   imgSrc: z.string().nullish(),
+  ogUrl: z.string(),
 });
 
 function MakeCardForm({
@@ -33,7 +36,7 @@ function MakeCardForm({
     title: string;
     website?: string;
     email: string;
-    slug?: string;
+    ogUrl: string;
     imgSrc?: string;
   };
   editMode?: boolean;
@@ -89,11 +92,17 @@ function MakeCardForm({
 
   function publishHandler(e: FormEvent) {
     e.preventDefault();
+
+    const ogImageUrl =
+      process.env.NODE_ENV === "development"
+        ? `${process.env.NEXT_PUBLIC_DEV_URL}/api/og?username=${inputs.name}&title=${inputs.title}&imgSrc=${session?.user?.image}&preview=true`
+        : `${process.env.NEXT_PUBLIC_PROD_URL}/api/og?username=${inputs.name}&title=${inputs.title}&imgSrc=${session?.user?.image}&preview=true`;
     const cardInfo = {
       name: inputs.name,
       email: inputs.email,
       title: inputs.title,
       website: inputs.website,
+      ogUrl: ogImageUrl,
     };
     try {
       CardSchema.parse(cardInfo);
@@ -174,6 +183,7 @@ function MakeCardForm({
                 title: inputs.title,
                 email: inputs.email,
                 website: inputs.website,
+                ogUrl: "",
               }}
               isMakeCard={true}
             />

@@ -5,6 +5,7 @@ import { api } from "../../utils/api";
 import Spinner from "../../components/Spinner";
 import CenteredLayout from "../../components/Layout/CenteredLayout";
 import Heading from "../../components/Layout/Heading";
+import Head from "next/head";
 
 const UserProfileDetailPage = () => {
   const router = useRouter();
@@ -26,10 +27,16 @@ const UserProfileDetailPage = () => {
     <>
       {isLoading && <Spinner />}
       {!isLoading && card && (
-        <CenteredLayout>
-          <Heading>The Business Card</Heading>
-          <Card card={card} publicViewing={true} />
-        </CenteredLayout>
+        <>
+          <Head>
+            <title>{card.name}</title>
+            <meta property="og:image" content={card.ogUrl} />
+          </Head>
+          <CenteredLayout>
+            <Heading>The Business Card</Heading>
+            <Card card={card} publicViewing={true} />
+          </CenteredLayout>
+        </>
       )}
     </>
   );

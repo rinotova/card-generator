@@ -59,7 +59,7 @@ model BusinessCard {
   imgSrc        String?
   title         String
   website       String?
-  slug          String
+  ogUrl          String
   authorId String
   author   User   @relation(fields: [authorId], references: [id])
   @@unique([id, authorId])

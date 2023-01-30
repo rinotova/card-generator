@@ -13,7 +13,7 @@ const MakeCard = ({
     title: string;
     website?: string;
     email: string;
-    slug?: string;
+    ogUrl: string;
     imgSrc?: string;
   };
 }) => {
@@ -63,7 +63,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       title: true,
       website: true,
       email: true,
-      slug: true,
+      ogUrl: true,
     },
   })) as unknown;
 
