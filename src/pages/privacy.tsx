@@ -49,16 +49,17 @@ const Privacy: NextPage = () => {
           <p>
             We want to inform you that whenever you visit our Service, we
             collect information that your browser sends to us that is called Log
-            Data. This Log Data may include information such as your computer's
-            Internet Protocol (“IP”) address, browser version, pages of our
-            Service that you visit, the time and date of your visit, the time
-            spent on those pages, and other statistics.
+            Data. This Log Data may include information such as your
+            computer`&rsquo;` Internet Protocol (“IP”) address, browser version,
+            pages of our Service that you visit, the time and date of your
+            visit, the time spent on those pages, and other statistics.
           </p>
           <h2>Cookies</h2>
           <p>
             Cookies are files with small amount of data that is commonly used an
             anonymous unique identifier. These are sent to your browser from the
-            website that you visit and are stored on your computer's hard drive.
+            website that you visit and are stored on your computer`&rsquo;` hard
+            drive.
           </p>
           <p>
             Our website uses these “cookies” to collection information and to
@@ -101,7 +102,7 @@ const Privacy: NextPage = () => {
             control over, and assume no responsibility for the content, privacy
             policies, or practices of any third-party sites or services.
           </p>
-          <p>Children's Privacy</p>
+          <p>Children`&rsquo;` Privacy</p>
           <p>
             Our Services do not address anyone under the age of 13. We do not
             knowingly collect personal identifiable information from children

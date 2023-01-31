@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { type NextPage } from "next";
 import type { GetSessionParams } from "next-auth/react";
 import { getSession } from "next-auth/react";
@@ -14,7 +15,8 @@ const TC: NextPage = () => {
 
         <p>
           These terms and conditions outline the rules and regulations for the
-          use of Business card generator's Website, located at THE WEBSITE.
+          use of Business card generator`&rsquo;` Website, located at THE
+          WEBSITE.
         </p>
 
         <p>
@@ -47,7 +49,7 @@ const TC: NextPage = () => {
         <p>
           We employ the use of cookies. By accessing Business card generator,
           you agreed to use cookies in agreement with the Business card
-          generator's Privacy Policy.{" "}
+          generator`&rsquo;` Privacy Policy.{" "}
         </p>
 
         <p>
@@ -227,8 +229,8 @@ const TC: NextPage = () => {
         </ul>
 
         <p>
-          No use of Business card generator's logo or other artwork will be
-          allowed for linking absent a trademark license agreement.
+          No use of Business card generator`&rsquo;` logo or other artwork will
+          be allowed for linking absent a trademark license agreement.
         </p>
 
         <h3>

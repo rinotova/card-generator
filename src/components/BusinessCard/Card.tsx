@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import Image from "next/image";
 import type { MouseEvent } from "react";
 import { FaEdit, FaTrashAlt, FaShare } from "react-icons/fa";
 import { api } from "../../utils/api";
