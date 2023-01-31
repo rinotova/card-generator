@@ -2,7 +2,7 @@ import { ImageResponse } from "@vercel/og";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export const config = {
-  runtime: "experimental-edge",
+  runtime: "edge",
 };
 
 const og = (req: NextApiRequest, res: NextApiResponse) => {
