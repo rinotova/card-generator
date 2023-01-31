@@ -17,13 +17,22 @@ function makeid(length: number) {
   return result;
 }
 
+export interface ExtendedUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  userName?: string | null;
+}
+
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
     session({ session, user }) {
+      const theUser: ExtendedUser = user;
       if (session.user) {
-        session.user.id = user.id;
-        session.user.userName = user.userName as string;
+        session.user.id = theUser.id;
+        session.user.userName = theUser.userName as string;
       }
       return session;
     },
