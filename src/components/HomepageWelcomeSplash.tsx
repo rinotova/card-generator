@@ -4,7 +4,7 @@ import React from "react";
 function HomepageWelcomeSplash() {
   const { data: session } = useSession();
   const signInHandler = () => {
-    void signIn("google", { callbackUrl: "/makeCard" });
+    void signIn("google");
   };
   return (
     <div className="flex flex-col items-center justify-center">
