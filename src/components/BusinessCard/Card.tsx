@@ -9,6 +9,7 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import FrontCard from "../FrontCard";
 
 export type TheCardType = {
   id?: string;
@@ -213,17 +214,7 @@ const Card = ({
         </div>
 
         {/* Front of the card */}
-
-        <div className="card-front">
-          <Image
-            src={ogImageUrl}
-            alt="Business card"
-            width={480}
-            height={240}
-            quality={100}
-            priority={true}
-          />
-        </div>
+        <FrontCard ogImageUrl={ogImageUrl} />
       </div>
     </>
   );

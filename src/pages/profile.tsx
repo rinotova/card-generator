@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { getSession, useSession } from "next-auth/react";
 import type { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
@@ -7,7 +8,7 @@ import Heading from "../components/Layout/Heading";
 import { prisma } from "../server/db";
 import type { User } from "@prisma/client";
 import { api } from "../utils/api";
-import { toast } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 
 const UserProfile = ({ user }: { user: User }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -19,6 +20,11 @@ const UserProfile = ({ user }: { user: User }) => {
     void router.push("/");
     return;
   }
+
+  const theUrl =
+    process.env.NODE_ENV === "development"
+      ? `${process.env.NEXT_PUBLIC_DEV_URL}/${session.user?.userName}`
+      : `${process.env.NEXT_PUBLIC_PROD_URL}/${session.user?.userName}`;
 
   const { mutate, isLoading } =
     api.userRouter.updateUsersProfileVisibility.useMutation({
@@ -33,11 +39,17 @@ const UserProfile = ({ user }: { user: User }) => {
       },
     });
 
+  const handleCopy = (value: string) => {
+    toast.success("Link copied!", { duration: 3000 });
+    void navigator.clipboard.writeText(value);
+  };
+
   return (
     <>
+      <Toaster />
       <CenteredLayout>
         <Heading>My Profile</Heading>
-        <form className="rounded-lg bg-white p-6 shadow-md md:w-[60%]">
+        <form className="mb-4 w-full rounded-lg bg-white p-6 shadow-md md:w-[60%]">
           <label className="relative inline-flex cursor-pointer items-center">
             <input
               onChange={(e) => {
@@ -55,6 +67,22 @@ const UserProfile = ({ user }: { user: User }) => {
             </span>
           </label>
         </form>
+        {isPublic && (
+          <div className="flex w-full items-center rounded-lg border border-gray-300 p-2 md:w-[60%]">
+            <input
+              className="focus:shadow-outline w-full p-2 outline-none focus:border-indigo-500"
+              type="text"
+              value={theUrl}
+              disabled={true}
+            />
+            <button
+              className="ml-2 rounded-full bg-indigo-500 p-2 font-bold text-white hover:bg-indigo-600"
+              onClick={handleCopy.bind(null, theUrl)}
+            >
+              Copy
+            </button>
+          </div>
+        )}
       </CenteredLayout>
     </>
   );
