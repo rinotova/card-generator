@@ -15,7 +15,12 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ["lh3.googleusercontent.com", "localhost", "placeimg.com"],
+    domains: [
+      "lh3.googleusercontent.com",
+      "localhost",
+      "placeimg.com",
+      "business-card-generator-iota.vercel.app",
+    ],
   },
 };
 export default config;
