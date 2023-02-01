@@ -8,7 +8,10 @@ const PageLayout = ({ children }: { children: React.ReactNode }) => {
     <main>
       <Head>
         <title>Business card generator</title>
-        <meta name="description" content="As seen in The Office" />
+        <meta
+          name="description"
+          content="Make a digital card, save the world"
+        />
       </Head>
       <Navbar />
       <div className="min-h-[calc(100vh-4rem)] bg-purple-600 bg-gradient-to-br from-rose-500 p-4">
