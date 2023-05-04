@@ -20,4 +20,4 @@ Stack:
 
 ## Demo
 
-[Business card generator](https://business-card-generator-iota.vercel.app/)
+[Business card generator](https://business-card-generator-git-main-rinotova.vercel.app/)
