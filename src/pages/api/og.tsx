@@ -10,7 +10,11 @@ const og = (req: NextApiRequest, res: NextApiResponse) => {
   if (!req.url) {
     return res.status(400).json({ error: "An url is required" });
   }
-  const url = new URL(req.url, "http://localhost:3000");
+  const baseUrl =
+    process.env.NODE_ENV === "development"
+      ? process.env.NEXT_PUBLIC_DEV_URL
+      : process.env.NEXT_PUBLIC_PROD_URL;
+  const url = new URL(req.url, baseUrl);
   const name = url.searchParams.get("username");
   const title = url.searchParams.get("title");
   const imgSrc = url.searchParams.get("imgSrc");
